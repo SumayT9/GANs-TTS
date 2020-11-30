@@ -1,4 +1,4 @@
-from encoder.preprocess import preprocess_librispeech, preprocess_voxceleb1, preprocess_voxceleb2
+from encoder.preprocess import preprocess_librispeech, preprocess_voxceleb1, preprocess_voxceleb2, preprocess_other
 from utils.argutils import print_args
 from pathlib import Path
 import argparse
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Preprocesses audio files from datasets, encodes them as mel spectrograms and "
                     "writes them to the disk. This will allow you to train the encoder. The "
-                    "datasets required are at least one of VoxCeleb1, VoxCeleb2 and LibriSpeech. "
+                    "datasets required are at least one of VoxCeleb1, VoxCeleb2, LibriSpeech, and Youtube_dataset. "
                     "Ideally, you should have all three. You should extract them as they are "
                     "after having downloaded them and put them in a same directory, e.g.:\n"
                     "-[datasets_root]\n"
@@ -29,7 +29,7 @@ if __name__ == "__main__":
         "Path to the output directory that will contain the mel spectrograms. If left out, "
         "defaults to <datasets_root>/SV2TTS/encoder/")
     parser.add_argument("-d", "--datasets", type=str, 
-                        default="librispeech_other,voxceleb1,voxceleb2", help=\
+                        default="librispeech_other,voxceleb1,voxceleb2, Youtube_dataset", help=\
         "Comma-separated list of the name of the datasets you want to preprocess. Only the train "
         "set of these datasets will be used. Possible names: librispeech_other, voxceleb1, "
         "voxceleb2.")
