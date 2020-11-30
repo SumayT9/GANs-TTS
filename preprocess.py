@@ -183,6 +183,6 @@ def preprocess_other(datasets_root: Path, out_dir: Path, skip_existing=False):
     
     # Get the speaker directories
     # Preprocess all speakers
-    speaker_dirs = list(dataset_root.joinpath("wav").glob("*"))
+    speaker_dirs = list(dataset_root.glob("*"))
     _preprocess_speaker_dirs(speaker_dirs, dataset_name, datasets_root, out_dir, "m4a",
                              skip_existing, logger)
