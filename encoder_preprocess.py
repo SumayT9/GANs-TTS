@@ -32,7 +32,7 @@ if __name__ == "__main__":
         "Path to the output directory that will contain the mel spectrograms. If left out, "
         "defaults to <datasets_root>/SV2TTS/encoder/")
     parser.add_argument("-d", "--datasets", type=str, 
-                        default="librispeech_other,voxceleb1,voxceleb2, Youtube_dataset", help=\
+                        default="librispeech_other,voxceleb1,voxceleb2,Youtube_dataset", help=\
         "Comma-separated list of the name of the datasets you want to preprocess. Only the train "
         "set of these datasets will be used. Possible names: librispeech_other, voxceleb1, "
         "voxceleb2.")
