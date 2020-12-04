@@ -21,7 +21,7 @@ if __name__ == "__main__":
                     "    -vox1_meta.csv\n"
                     "  -VoxCeleb2\n"
                     "    -dev"
-                    " -Youtube_dataset\n
+                    " -Youtube_dataset\n"
                          -wav",
         
         formatter_class=MyFormatter
