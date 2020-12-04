@@ -20,7 +20,10 @@ if __name__ == "__main__":
                     "    -wav\n"
                     "    -vox1_meta.csv\n"
                     "  -VoxCeleb2\n"
-                    "    -dev",
+                    "    -dev"
+                    " -Youtube_dataset\n
+                         -wav",
+        
         formatter_class=MyFormatter
     )
     parser.add_argument("datasets_root", type=Path, help=\
