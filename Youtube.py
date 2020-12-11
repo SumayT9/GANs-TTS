@@ -35,6 +35,8 @@ def parse(argv):
 
 if(len(sys.argv) >= 2):
    lengthOfClip, url, title, search_query, max_results, speaker = parse(sys.argv[1:])
+else:
+   url = ""
 
 #searching for youtube videos
 from youtube_search import YoutubeSearch
