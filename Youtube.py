@@ -33,7 +33,8 @@ def parse(argv):
           speaker_num = arg
        return length,url,title,search,max,speaker_num
 
-lengthOfClip, url, title, search_query, max_results, speaker = parse(sys.argv[1:])
+if(len(sys.argv) >= 2):
+   lengthOfClip, url, title, search_query, max_results, speaker = parse(sys.argv[1:])
 
 #searching for youtube videos
 from youtube_search import YoutubeSearch
