@@ -2,6 +2,8 @@
 import os
 import sys, getopt
 
+listOfUrl = False
+
 def parse(argv):
     length = 3
     url = []
@@ -23,6 +25,7 @@ def parse(argv):
           length = arg
        elif opt in ("-u", "--url"):
           url.append(arg)
+          listOfUrl = True
        elif opt in ("-t", "--title"):
           title.append(arg)
        elif opt in ("-q", "--search"):
@@ -98,8 +101,8 @@ else:
 
 #download videos
 for url, title in videos:
-  
-  dir = "sp"+str(speaker)
+  if(!listOfUrl):
+     dir = "sp"+str(speaker)
   os.system("mkdir out/Youtube_dataset/" + dir)
   speaker += 1
   print("getting video...", end="")
