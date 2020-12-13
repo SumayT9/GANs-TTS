@@ -101,7 +101,7 @@ else:
 
 #download videos
 for url, title in videos:
-  if(!listOfUrl):
+  if(not listOfUrl):
      dir = "sp"+str(speaker)
   os.system("mkdir out/Youtube_dataset/" + dir)
   speaker += 1
