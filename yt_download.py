@@ -29,7 +29,7 @@ for filename in os.listdir('URLs'):
     for url in links:
         
         # print("getting video...", end="")
-        os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" "+url)
+        os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
         #   filename = "temp/" + os.listdir("temp")[0]
         #   print("finished downloading (", filename, ")", sep="")
         #remove illegal characters
