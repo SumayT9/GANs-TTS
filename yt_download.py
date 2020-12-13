@@ -8,7 +8,7 @@ os.system("pip3 install ffmpeg")
 #IO folders
 os.system("mkdir out")
 os.system("mkdir temp")
-os.system("mkdir out/Youtube_dataset")
+os.system("mkdir out\\Youtube_dataset")
 
 import pydub
 import subprocess
@@ -23,7 +23,7 @@ for filename in os.listdir('URLs'):
     links = open('URLs/'+filename, 'r')
     title = filename[:-4]
     dir = title
-    os.system("mkdir out/Youtube_dataset/" + dir)
+    os.system("mkdir out\\Youtube_dataset\\" + dir)
     
     #download videos
     for url in links:
