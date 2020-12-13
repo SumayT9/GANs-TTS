@@ -2,11 +2,12 @@
 import os
 import sys, getopt
 
+listOfUrl = False
+
 def parse(argv):
     length = 3
-    url = ""
-    urlArray = {}
-    title = ""
+    url = []
+    title = []
     search = "baseball commentary"
     max = 5
     speaker_num = 1
@@ -14,7 +15,7 @@ def parse(argv):
     try:
       opts, args = getopt.getopt(argv,"hl:u:t:q:m:s:",["length=","url=","title=","search=","max_results=","speaker="])
     except getopt.GetoptError:
-      print ('Youtube.py -l <length> -u <url> -t <title> -q <query> -m <max_results> -s <speaker number>')
+      print ('Youtube.py -l <length> -u <url[s]> -t <title> -q <query> -m <max_results> -s <speaker number>')
       sys.exit(2)
     for opt, arg in opts:
        if opt == '-h':
@@ -23,9 +24,10 @@ def parse(argv):
        elif opt in ("-l", "--length"):
           length = arg
        elif opt in ("-u", "--url"):
-          url = arg
+          url.append(arg)
+          listOfUrl = True
        elif opt in ("-t", "--title"):
-          title = arg
+          title.append(arg)
        elif opt in ("-q", "--search"):
           search = arg
        elif opt in ("-m", "--max_results"):
@@ -72,11 +74,11 @@ os.system("mkdir temp")
 os.system("mkdir out/Youtube_dataset")
 
 
-
+videos = []
 #get search results
 if(url == ""):
    results = YoutubeSearch(search_query, max_results=max_results).to_dict()
-   videos = []
+   
    #get links from results
    for video in results:
      url = "youtube.com" + video["url_suffix"]
@@ -89,13 +91,18 @@ if(url == ""):
 
    ytSuccesses = 0
 else:
-   video = [(url,title)]
+   if(url.len == title.len):
+      i = 0
+      while(i < url.len):
+         videos.append((url.get(i),title.get(i)))
+   else:
+      videos.append(url.get(i),str(i) + "_video")
 
 
 #download videos
 for url, title in videos:
-  
-  dir = "sp"+str(speaker)
+  if(not listOfUrl):
+     dir = "sp"+str(speaker)
   os.system("mkdir out/Youtube_dataset/" + dir)
   speaker += 1
   print("getting video...", end="")
