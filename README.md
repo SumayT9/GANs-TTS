@@ -20,10 +20,6 @@ Steps to use:
 
 7 Run encoder_preprocess.py  Path/to/out/Youtube_dataset
 
-*[ 8-9 only needed if you care about visdom ]*
-
 8 Open a visdom server in a seperate CLI (command line interface)
 
-9 Run encoder/visulizations.py
-
-10 Run encoder_train.py pretrained Path/to/out/Youtube_dataset/SV2TTS/encoder
+9 Run encoder_train.py pretrained Path/to/out/Youtube_dataset/SV2TTS/encoder
