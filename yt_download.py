@@ -8,7 +8,7 @@ os.system("pip3 install ffmpeg")
 #IO folders
 os.system("mkdir out")
 os.system("mkdir temp")
-os.system("mkdir out\\Youtube_dataset")
+os.system("mkdir out/Youtube_dataset")
 
 import pydub
 import subprocess
@@ -23,7 +23,7 @@ for filename in os.listdir('URLs'):
     links = open('URLs/'+filename, 'r')
     title = filename[:-4]
     dir = title
-    os.system("mkdir out\\Youtube_dataset\\" + dir)
+    os.system("mkdir out/Youtube_dataset/" + dir)
     
     #download videos
     for url in links:
@@ -33,7 +33,7 @@ for filename in os.listdir('URLs'):
             title = title.replace(c, "")
         ytSuccesses += 1
 
-        os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -c copy temp/" + title + ".wav") #saves as .wav
+        os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
         
         
         file = "temp/" + title + ".wav"
@@ -74,7 +74,10 @@ for filename in os.listdir('URLs'):
                 os.system("ffmpeg -loglevel warning -i " + file + " -c copy out/Youtube_dataset/" + dir + file[6:len(file)-4] + "_" + str(clip) + ".wav")
             while i < len(text):
                 j = 2
-                temp = float(text[i+j]) - float(time)
+                try:
+                    temp = float(text[i+j]) - float(time)
+                except:
+                    print("error") #Fix later not a huge issue
                 #Un-comment to add min time (Not fully tested)
                     #while (temp < 3) & (i+j < len(text)): #CHANGE MIN TIME HERE
                     #j += 2
