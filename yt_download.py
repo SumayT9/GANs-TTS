@@ -37,7 +37,7 @@ for filename in os.listdir('URLs'):
         
         
         file = "temp/" + title + ".wav"
-        os.system("ffmpeg -i " + file + " -af silencedetect=noise=-30dB:d=0.3 -f null - 2> vol.txt") #CHANGE SILENCE TIME AT: d=
+        os.system("ffmpeg -i " + file + " -af silencedetect=noise=-30dB:d=0.2 -f null - 2> vol.txt") #CHANGE SILENCE TIME AT: d=
         with open('vol.txt', 'r+') as temp:
             text = temp.read()
             text = text.replace('silence_start: ','split')
@@ -57,7 +57,6 @@ for filename in os.listdir('URLs'):
                     i += 1
                 else:
                     i += 1
-            print(text)
             i = 1
             clip = 0
             try:
@@ -66,31 +65,41 @@ for filename in os.listdir('URLs'):
                 else:
                     time = 0.0
                     temp = float(text[0])
-                    os.system("ffmpeg -loglevel warning -ss " + str(time) + " -i " + file + " -t " + str(temp) + " -c copy out/Youtube_dataset/" + dir + file[6:len(file)-4] + "_" + str(clip) + ".wav")
+                    os.system("ffmpeg -loglevel warning -ss " + str(time) + " -i " + file + " -t " + str(temp) + " -c copy out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
                     time = text[1]
                     clip += 1
             except:
                 print("no silence")
-                os.system("ffmpeg -loglevel warning -i " + file + " -c copy out/Youtube_dataset/" + dir + file[6:len(file)-4] + "_" + str(clip) + ".wav")
+                os.system("ffmpeg -loglevel warning -i " + file + " -c copy out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
+            totalTime = 0;
             while i < len(text):
                 j = 2
                 try:
                     temp = float(text[i+j]) - float(time)
+                    while (temp < 5) & (i+j < len(text)): #CHANGE MIN TIME HERE
+                        j += 3
+                        temp = float(text[i+j]) - float(time)
+                    i += (j - 2)
+                    j = 2
                 except:
-                    print("error") #Fix later not a huge issue
-                #Un-comment to add min time (Not fully tested)
-                    #while (temp < 3) & (i+j < len(text)): #CHANGE MIN TIME HERE
-                    #j += 2
-                    #temp = float(text[i+j]) - float(time)
-                os.system("ffmpeg -loglevel warning -ss " + str(time) + " -i " + file + " -t " + str(temp) + " -c copy out/Youtube_dataset/" + dir + file[6:len(file)-4] + "_" + str(clip) + ".wav")
+                    print("error") #Fix later not a huge issue just might lose one clip per video in worst case
+                    break;
+                    
+                os.system("ffmpeg -loglevel warning -ss " + str(time) + " -i " + file + " -t " + str(temp) + " -c copy out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
                 i += 3
+                print("len:" + str(temp))
+                totalTime += temp
                 try:
                     time = text[i]
                 except:
-                    print("exit loop")
+                    print("exited loop")
                 clip += 1
                 print("Cut")
+            print("\n------------------------------------\n")
+            print("Total Clips:" + str(clip))
+            print("Avg Time: " + str(totalTime/clip))
             print("Done!")
+                
         
         
 print(ytSuccesses, "Youtube videos successfully downloaded")
