@@ -11,12 +11,11 @@ Steps to use:
 
 3 Put saved_models into RTVC/encoder
 
-4 Put the temp folder in the location you will run yt_download.py
-        This is because python has trouble creating .webm files
+4 Create a folder called URLs and place textfiles containing URLs to be downloaded
 
 5 Run yt_download.py
 
-6 run pip3 install -r RTVC/requirments.txt
+6 Run pip3 install -r RTVC/requirments.txt
 
 7 Run encoder_preprocess.py  Path/to/out/Youtube_dataset
 
