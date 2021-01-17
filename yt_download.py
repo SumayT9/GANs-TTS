@@ -1,9 +1,7 @@
 import os
+import json
 os.system("pip3 install youtube-dl pydub pysrt")
 
-#ffmpeg
-os.system("brew install ffmpeg")
-os.system("pip3 install ffmpeg")
 
 #IO folders
 os.system("mkdir out")
@@ -32,8 +30,10 @@ for filename in os.listdir('URLs'):
         for c in "\"\' |&?!()+-*/":
             title = title.replace(c, "")
         ytSuccesses += 1
-
-        os.system("ffmpeg -loglevel warning -i temp/audio.m4a -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
+        try:
+            os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
+        except:
+            os.system("ffmpeg -loglevel warning -i temp/audio.m4a -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
         
         
         file = "temp/" + title + ".wav"
@@ -97,6 +97,15 @@ for filename in os.listdir('URLs'):
                 #Change name to your user name
         
                 os.system("autosub -F json out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
+                with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json") as J:
+                    data = json.load(J)
+                    with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".txt","w+") as txt:
+                        for content in data:
+                            txt.write(content['content'])
+                            txt.write(" ")
+
+
+
                 clip += 1
             print("\n------------------------------------\n")
             print("Total Clips:" + str(clip))
