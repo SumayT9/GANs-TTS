@@ -24,16 +24,16 @@ for filename in os.listdir('URLs'):
     title = filename[:-4]
     dir = title
     os.system("mkdir out/Youtube_dataset/" + dir)
-    
+    titleNum = 0;
     #download videos
     for url in links:
-        
+        title = title + "_" + str(titleNum)
         os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
         for c in "\"\' |&?!()+-*/":
             title = title.replace(c, "")
         ytSuccesses += 1
 
-        os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
+        os.system("ffmpeg -loglevel warning -i temp/audio.m4a -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
         
         
         file = "temp/" + title + ".wav"
