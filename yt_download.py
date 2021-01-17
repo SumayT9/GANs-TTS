@@ -13,7 +13,6 @@ os.system("mkdir out/Youtube_dataset")
 
 import pydub
 import subprocess
-import speech_recognition as sr
 import sys, getopt
 from youtube_search import YoutubeSearch
 
@@ -95,21 +94,9 @@ for filename in os.listdir('URLs'):
                 except:
                     print("exited loop")
                 print("Cut")
-                recog = sr.Recognizer()
-                with sr.AudioFile("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav") as source:
-                    audio = recog.record(source) #read entire audio file
-                try:
-                    output = recog.recognize_sphinx(audio)
-                    file = os.open("content/" + title + "_" + str(clip) + " captions.txt", "w")
-                    file.write(output)
-                    file.close()
-                    print("", "content/" + title + "_" + str(clip) + " captions.txt", " generated", sep="\"")
-                except sr.UnknownValueError:
-                    print("Sphinx could not understand audio")
-                except sr.RequestError as e:
-                    print("Sphinx error; {0}".format(e))
-                except e:
-                    print(e)
+                #Change name to your user name
+        
+                os.system("autosub -F json out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
                 clip += 1
             print("\n------------------------------------\n")
             print("Total Clips:" + str(clip))
