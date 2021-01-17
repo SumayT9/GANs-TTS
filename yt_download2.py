@@ -22,19 +22,17 @@ for filename in os.listdir('URLs'):
         continue
 
     links = open('URLs/'+filename, 'r')
-    title = filename[:-4]
+    name = filename[:-4]
     for c in "\"\' |&?!()+-*/":
-        title = title.replace(c, "")
-    dir = title
+        name = name.replace(c, "")
+    dir = name
     os.system("mkdir out/Youtube_dataset/" + dir)
 
     titleNum = 0;
 
-    title = title + "__"
     #download videos
     for url in links:
-        title = title[:-2]
-        title = title + "_" + str(titleNum)
+        title = name + "_" + str(titleNum)
         titleNum += 1
         subdir = title
 
