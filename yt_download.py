@@ -99,10 +99,13 @@ for filename in os.listdir('URLs'):
                 os.system("autosub -F json out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
                 with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json") as J:
                     data = json.load(J)
-                    with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".txt","w+") as txt:
+                    with open("out/Youtube_dataset/" + dir + "/" + title + ".txt","a+") as txt:
+                        txt.write(title + "_" + str(clip) + ".wav | ")
                         for content in data:
                             txt.write(content['content'])
                             txt.write(" ")
+                        txt.write("\r\n")
+                os.remove("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json")
 
 
 
