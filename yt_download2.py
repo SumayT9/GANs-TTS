@@ -1,7 +1,7 @@
 import os
 from os import path
 import json
-os.system("pip3 install youtube-dl pydub pysrt")
+#os.system("pip3 install youtube-dl pydub pysrt")
 
 
 #IO folders
@@ -37,15 +37,18 @@ for filename in os.listdir('URLs'):
         title = title + "_" + str(titleNum)
         titleNum += 1
         subdir = title
-        os.system("mkdir out/Youtube_dataset/"+dir+"/"+subdir)
 
         os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
         ytSuccesses += 1
         if(path.exists("temp/audio.webm")):
             os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
-        else:
+        elif(path.exists("temp/audio.webm")):
             os.system("ffmpeg -loglevel warning -i temp/audio.m4a -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
-        
+        else:
+            continue
+
+
+        os.system("mkdir out/Youtube_dataset/"+dir+"/"+subdir)
         
         file = "temp/" + title + ".wav"
         os.system("ffmpeg -i " + file + " -af silencedetect=noise=-30dB:d=0.2 -f null - 2> vol.txt") #CHANGE SILENCE TIME AT: d=
