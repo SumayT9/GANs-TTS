@@ -15,12 +15,14 @@ Steps to use:
 
 5 run pip3 install autosub3 on the CLI
 
-6 Run yt_download.py
+6 run pip3 install ffmpeg on the CLI
 
-7 Run pip3 install -r RTVC/requirments.txt
+7 Run yt_download.py
 
-8 Run encoder_preprocess.py  Path/to/out/Youtube_dataset
+8 Run pip3 install -r RTVC/requirments.txt
 
-9 Open a visdom server in a seperate CLI (command line interface)
+9 Run encoder_preprocess.py  Path/to/out/Youtube_dataset
 
-10 Run encoder_train.py pretrained Path/to/out/Youtube_dataset/SV2TTS/encoder
+10 Open a visdom server in a seperate CLI (command line interface)
+
+11 Run encoder_train.py pretrained Path/to/out/Youtube_dataset/SV2TTS/encoder
