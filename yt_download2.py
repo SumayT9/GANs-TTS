@@ -27,6 +27,7 @@ for filename in os.listdir('URLs'):
         name = name.replace(c, "")
     dir = name
     os.system("mkdir out/Youtube_dataset/" + dir)
+    print("\nProcessing "+dir+"...")
 
     titleNum = 0;
 
@@ -35,12 +36,13 @@ for filename in os.listdir('URLs'):
         title = name + "_" + str(titleNum)
         titleNum += 1
         subdir = title
+        print("processing "+title+"...")
 
         os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
         ytSuccesses += 1
         if(path.exists("temp/audio.webm")):
             os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
-        elif(path.exists("temp/audio.webm")):
+        elif(path.exists("temp/audio.m4a")):
             os.system("ffmpeg -loglevel warning -i temp/audio.m4a -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
         else:
             continue
@@ -128,7 +130,7 @@ for filename in os.listdir('URLs'):
             print("Done!")
             if(path.exists("temp/audio.webm")):
                 os.remove("temp/audio.webm")
-            else:
+            if(path.exists("temp/audio.m4a")):
                 os.remove("temp/audio.m4a")
                 
         
