@@ -13,9 +13,15 @@ import pydub
 import subprocess
 import sys, getopt
 from youtube_search import YoutubeSearch
+import youtube_dl
 
 lengthOfClip = 3
 ytSuccesses = 0
+
+#for some reason, I was having trouble with the commands, so I reference the one specifically from 
+py37prefix = ""
+if(True):
+    py37prefix = "python3 -m "
 
 for filename in os.listdir('URLs'):
     if(not os.path.isfile("URLs/"+filename)):
@@ -38,7 +44,8 @@ for filename in os.listdir('URLs'):
         subdir = title
         print("processing "+title+"...")
 
-        os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
+        #os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
+        os.system(py37prefix + "youtube_dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
         ytSuccesses += 1
         if(path.exists("temp/audio.webm")):
             os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
@@ -110,15 +117,23 @@ for filename in os.listdir('URLs'):
                 print("Cut")
                 #Change name to your user name
         
+                    
                 os.system("autosub -F json out/Youtube_dataset/" + dir + "/" + subdir + "/" + title + "_" + str(clip) + ".wav")
+                start = 0
+                end = 0
                 with open("out/Youtube_dataset/" + dir + "/" + subdir + "/" + title + "_" + str(clip) + ".json") as J:
                     data = json.load(J)
-                    with open("out/Youtube_dataset/" + dir + "/" + subdir + "/" + title + ".trans.txt","a+") as txt:
-                        txt.write(title + "_" + str(clip) + ".wav | ")
-                        for content in data:
-                            txt.write(content['content'])
-                            txt.write(" ")
-                        txt.write("\r\n")
+                    if(len(data) > 0):
+                        with open("out/Youtube_dataset/" + dir + "/" + subdir + "/" + title + ".trans.txt","a+") as txt:
+                            txt.write(title + "_" + str(clip) + "trim.wav | ")
+                            for content in data:
+                                txt.write(content['content'])
+                                txt.write(" ")
+                                start = min(start, content['start'])
+                                end = max(end, content['end'])
+                            txt.write("\r\n")
+                        os.system("ffmpeg -loglevel warning -ss "+str(start)+" -to "+str(end)+" -i out/Youtube_dataset/"+dir+"/"+subdir+"/"+title+"_"+str(clip)+".wav out/Youtube_dataset/"+dir+"/"+subdir+"/"+title+"_"+str(clip)+"trim.wav")
+                        os.remove("out/Youtube_dataset/"+dir+"/"+subdir+"/"+title+"_"+str(clip)+".wav")
                 os.remove("out/Youtube_dataset/" + dir + "/" + subdir + "/" + title + "_" + str(clip) + ".json")
 
 
