@@ -1,18 +1,16 @@
 import os
+import json
 os.system("pip3 install youtube-dl pydub pysrt")
 
-#ffmpeg
-os.system("brew install ffmpeg")
-os.system("pip3 install ffmpeg")
 
 #IO folders
 os.system("mkdir out")
 os.system("mkdir temp")
+os.system("mkdir content")
 os.system("mkdir out/Youtube_dataset")
 
 import pydub
 import subprocess
-import os
 import sys, getopt
 from youtube_search import YoutubeSearch
 
@@ -24,16 +22,18 @@ for filename in os.listdir('URLs'):
     title = filename[:-4]
     dir = title
     os.system("mkdir out/Youtube_dataset/" + dir)
-    
+    titleNum = 0;
     #download videos
     for url in links:
-        
+        title = title + "_" + str(titleNum)
         os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
         for c in "\"\' |&?!()+-*/":
             title = title.replace(c, "")
         ytSuccesses += 1
-
-        os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
+        try:
+            os.system("ffmpeg -loglevel warning -i temp/audio.webm -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
+        except:
+            os.system("ffmpeg -loglevel warning -i temp/audio.m4a -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
         
         
         file = "temp/" + title + ".wav"
@@ -93,8 +93,23 @@ for filename in os.listdir('URLs'):
                     time = text[i]
                 except:
                     print("exited loop")
-                clip += 1
                 print("Cut")
+                #Change name to your user name
+        
+                os.system("autosub -F json out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
+                with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json") as J:
+                    data = json.load(J)
+                    with open("out/Youtube_dataset/" + dir + "/" + title + ".txt","a+") as txt:
+                        txt.write(title + "_" + str(clip) + ".wav | ")
+                        for content in data:
+                            txt.write(content['content'])
+                            txt.write(" ")
+                        txt.write("\r\n")
+                os.remove("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json")
+
+
+
+                clip += 1
             print("\n------------------------------------\n")
             print("Total Clips:" + str(clip))
             print("Avg Time: " + str(totalTime/clip))
