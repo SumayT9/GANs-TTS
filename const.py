@@ -1,1 +1,4 @@
-api_key = #your key here
+api_key = #your api key
+
+def get_api_key():
+    return api_key
