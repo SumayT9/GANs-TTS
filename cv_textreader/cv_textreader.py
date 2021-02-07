@@ -67,6 +67,8 @@
 
 import cv2
 import sys
+import os
+import pytesseract 
 
 SCALE = 4
 AREA_THRESHOLD = 427505.0 / 2
@@ -80,6 +82,7 @@ def show_scaled(name, img):
 
 def main():
     img = cv2.imread("CSzyw.png")
+    # img = cv2.imread("test2.jpg")
     print("Hello World")
     img = img[10:-10, 10:-10] # remove the border, it confuses contour detection
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -104,12 +107,31 @@ def main():
     # show_scaled("closing", closing)
 
     for contour in contours:
+        print('contour')
         convex_contour = cv2.convexHull(contour)
         area = cv2.contourArea(convex_contour)
         if area > AREA_THRESHOLD:
             cv2.drawContours(img, [convex_contour], -1, (255,0,0), 3)
+            x, y, w, h = cv2.boundingRect(contour) 
+	
+# 	# Drawing a rectangle on copied image 
+            rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2) 
+	
+# 	# Cropping the text block for giving input to OCR 
+            cropped = img[y:y + h, x:x + w] 
+            file = open("recognized.txt", "a") 
+	
+	        # Apply OCR on the cropped image 
+            text = pytesseract.image_to_string(cropped) 
+	
+	        # Appending the text into file 
+            file.write(text) 
+            file.write("\n") 
+	
+            # Close the file 
+            file.close 
 
-    # show_scaled("contours", img)
+            # show_scaled("contours", img)
     cv2.imwrite("contours.png", img)
     cv2.waitKey()
 
