@@ -17,12 +17,14 @@ Steps to use:
 
 6 run pip3 install ffmpeg on the CLI
 
-7 Run yt_download.py
+7 add your assembly api key to const.py  [http://assemblyai.com]
 
-8 Run pip3 install -r RTVC/requirments.txt
+8 Run yt_download.py
 
-9 Run encoder_preprocess.py  Path/to/out/Youtube_dataset
+9 Run pip3 install -r RTVC/requirments.txt
 
-10 Open a visdom server in a seperate CLI (command line interface)
+10 Run encoder_preprocess.py  Path/to/out/Youtube_dataset
 
-11 Run encoder_train.py pretrained Path/to/out/Youtube_dataset/SV2TTS/encoder
+11 Open a visdom server in a seperate CLI (command line interface)
+
+12 Run encoder_train.py pretrained Path/to/out/Youtube_dataset/SV2TTS/encoder
