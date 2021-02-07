@@ -3,8 +3,11 @@ import time
 import os
 import requests
 import json
+import const
 
 # reads audio files
+api_key = const.api_key #put your own key
+
 def read_file(filename, chunk_size=5242880):
     with open(filename, 'rb') as _file:
         while True:
@@ -14,8 +17,8 @@ def read_file(filename, chunk_size=5242880):
             yield data
 
 # uploads file to API
-def upload(filename, api_key):
-    headers_upload = {'authorization': api_key}
+def upload(filename, new_key=api_key):
+    headers_upload = {'authorization': new_key}
     response_upload = requests.post('https://api.assemblyai.com/v2/upload',
                                     headers=headers_upload,
                                     data=read_file(filename))
@@ -23,7 +26,7 @@ def upload(filename, api_key):
     return response_upload.json()
 
 # Transcribes audio
-def transcribe(endpoint, response_upload, api_key):
+def transcribe(endpoint, response_upload, new_key=api_key):
     json_transcription = {
         "audio_url": response_upload["upload_url"],
         "language_model": "assemblyai_media"

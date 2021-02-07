@@ -16,6 +16,7 @@ from youtube_search import YoutubeSearch
 
 lengthOfClip = 3
 ytSuccesses = 0
+totalSeconds = 0
 
 for filename in os.listdir('URLs'):
     links = open('URLs/'+filename, 'r')
@@ -114,6 +115,7 @@ for filename in os.listdir('URLs'):
             print("Total Clips:" + str(clip))
             print("Avg Time: " + str(totalTime/clip))
             print("Done!")
+            totalSeconds += totalTime
                 
         
         
