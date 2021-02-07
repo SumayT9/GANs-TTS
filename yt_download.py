@@ -14,9 +14,37 @@ import subprocess
 import sys, getopt
 from youtube_search import YoutubeSearch
 
+import transcriber
+
+import threading
+
 lengthOfClip = 3
 ytSuccesses = 0
 totalSeconds = 0
+
+numThreads = 0
+
+class transcribeThread(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        self.threadID = numThreads
+        numThreads += 1
+        self.name = "Thread" + str(self.threadID)
+    def run(self,dir,title,clip):
+        transcriber.read_file("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
+        response_upload = transcriber.upload("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
+        response_transcription = transcriber.transcribe(response_upload,labels=False)
+        transcriber.write_file("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav", response_transcription)
+        #with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json") as J:
+        #    data = json.load(J)
+        #    with open("out/Youtube_dataset/" + dir + "/" + title + ".txt","a+") as txt:
+        #        txt.write(title + "_" + str(clip) + ".wav | ")
+        #        for content in data:
+        #            txt.write(content['content'])
+        #            txt.write(" ")
+        #        txt.write("\r\n")
+        #os.remove("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json")
+        
 
 for filename in os.listdir('URLs'):
     links = open('URLs/'+filename, 'r')
@@ -95,18 +123,11 @@ for filename in os.listdir('URLs'):
                 except:
                     print("exited loop")
                 print("Cut")
-                #Change name to your user name
-        
-                os.system("autosub -F json out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
-                with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json") as J:
-                    data = json.load(J)
-                    with open("out/Youtube_dataset/" + dir + "/" + title + ".txt","a+") as txt:
-                        txt.write(title + "_" + str(clip) + ".wav | ")
-                        for content in data:
-                            txt.write(content['content'])
-                            txt.write(" ")
-                        txt.write("\r\n")
-                os.remove("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json")
+            
+                tempThread = transcribeThread()
+                tempThread.run(dir,title,clip)
+            
+                
 
 
 
@@ -117,7 +138,7 @@ for filename in os.listdir('URLs'):
             print("Done!")
             totalSeconds += totalTime
                 
-        
+
         
 print(ytSuccesses, "Youtube videos successfully downloaded")
 

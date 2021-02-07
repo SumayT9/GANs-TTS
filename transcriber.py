@@ -3,7 +3,9 @@ import time
 import os
 import requests
 import json
+import const
 
+api_key = const.get_api_key()
 
 # reads audio files
 def read_file(filename, chunk_size=5242880):
@@ -16,8 +18,8 @@ def read_file(filename, chunk_size=5242880):
 
 
 # uploads file to API
-def upload(filename, api_key):
-    headers_upload = {'authorization': api_key}
+def upload(filename, key=api_key):
+    headers_upload = {'authorization': key}
     response_upload = requests.post('https://api.assemblyai.com/v2/upload',
                                     headers=headers_upload,
                                     data=read_file(filename))
@@ -26,15 +28,17 @@ def upload(filename, api_key):
 
 
 # Transcribes audio
-def transcribe(response_upload, api_key, endpoint="https://api.assemblyai.com/v2/transcript", labels=False):
+def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.com/v2/transcript", labels=False):
     json_transcription = {
         "audio_url": response_upload["upload_url"],
         "language_model": "assemblyai_media",
         "speaker_labels": labels
+        "punctuate": False,
+        "format_text": False
     }
     
     headers_transcription = {
-        "authorization": api_key,
+        "authorization": key,
         "content-type": "application/json"
     }
 
@@ -46,7 +50,7 @@ def transcribe(response_upload, api_key, endpoint="https://api.assemblyai.com/v2
     while response['status'] != 'completed':
         endpoint_get = "https://api.assemblyai.com/v2/transcript/" + response['id']
         headers = {
-            "authorization": api_key,
+            "authorization": key,
         }
         response = requests.get(endpoint_get, headers=headers)
         try:
@@ -96,38 +100,3 @@ def save_json(audio_file_name, response):
     with open('assembly_output/' + audio_file_name[:-4] + '_2.json', 'w') as json_file:
         text = json.dumps(response)
         json_file.write(text)
-
-
-if __name__ == '__main__':
-    # looping through audio files
-    api_key = "39a86dbe224549e08e16178bffd9bf3a"
-    labels = False
-    for audio_file in os.listdir('tts-model/sampleAudios'):
-        if audio_file.endswith('.wav'):
-            filename = "tts-model/sampleAudios/" + audio_file
-            read_file(filename, chunk_size=5242880)
-
-            # uploading file to API
-            response_upload = upload(filename, api_key)
-
-            # where the transcript will be located
-            endpoint = "https://api.assemblyai.com/v2/transcript"
-
-            # transcribing the audio
-            response = transcribe(response_upload, api_key, endpoint=endpoint, labels=labels)
-
-            # use only for speaker labels
-            if labels:
-                speakers = find_speakers(response)
-
-
-            # writing transcript to transcript file
-            if labels:
-                write_file_wlabels(audio_file, speakers)
-            else:
-                write_file(audio_file, 'assembly_output/transcripts.txt', response)
-
-            # writing complete json to a json file
-            save_json(audio_file, response)
-
-            print('file ' + audio_file + 'done!')
