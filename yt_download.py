@@ -17,33 +17,41 @@ from youtube_search import YoutubeSearch
 import transcriber
 
 import threading
+import time
 
 lengthOfClip = 3
 ytSuccesses = 0
 totalSeconds = 0
 
-numThreads = 0
+threads = 0
+runningThreads = 0
 
 class transcribeThread(threading.Thread):
-    def __init__(self):
+    def __init__(self,numThreads,dir,title,clip):
+        global runningThreads
         threading.Thread.__init__(self)
         self.threadID = numThreads
-        numThreads += 1
         self.name = "Thread" + str(self.threadID)
-    def run(self,dir,title,clip):
-        transcriber.read_file("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
-        response_upload = transcriber.upload("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
-        response_transcription = transcriber.transcribe(response_upload,labels=False)
-        transcriber.write_file("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav", response_transcription)
-        #with open("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json") as J:
-        #    data = json.load(J)
-        #    with open("out/Youtube_dataset/" + dir + "/" + title + ".txt","a+") as txt:
-        #        txt.write(title + "_" + str(clip) + ".wav | ")
-        #        for content in data:
-        #            txt.write(content['content'])
-        #            txt.write(" ")
-        #        txt.write("\r\n")
-        #os.remove("out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".json")
+        runningThreads += 1
+        self.dir = dir
+        self.title = title
+        self.clip = clip
+    def run(self):
+        try:
+            global runningThreads
+            print(str(self.name))
+            transcriber.read_file("out/Youtube_dataset/" + self.dir + "/" + self.title + "_" + str(self.clip) + ".wav")
+            response_upload = transcriber.upload("out/Youtube_dataset/" + self.dir + "/" + self.title + "_" + str(self.clip) + ".wav")
+            response_transcription = transcriber.transcribe(response_upload,labels=False)
+            with open("out/Youtube_dataset/" + self.dir + "/" + self.title + ".txt","a+") as txt:
+                txt.write(self.title + "_" + str(self.clip) + ".wav | ")
+                txt.write(response_transcription['text'])
+                txt.write("\r\n")
+            print("Done with " + self.name)
+            runningThreads -= 1
+        except:
+            self.run()
+    
         
 
 for filename in os.listdir('URLs'):
@@ -123,13 +131,11 @@ for filename in os.listdir('URLs'):
                 except:
                     print("exited loop")
                 print("Cut")
-            
-                tempThread = transcribeThread()
-                tempThread.run(dir,title,clip)
-            
+                print("Thread made")
+                tempThread = transcribeThread(threads,dir,title,clip)
+                threads += 1
+                tempThread.start()
                 
-
-
 
                 clip += 1
             print("\n------------------------------------\n")
@@ -139,7 +145,13 @@ for filename in os.listdir('URLs'):
             totalSeconds += totalTime
                 
 
-        
+
 print(ytSuccesses, "Youtube videos successfully downloaded")
+print("Threads are being finishing")
+trys = 0
+while(runningThreads != 0):
+    trys += 1
+    print(str(runningThreads))
+print(str(trys) + "calls to finish")
 
 

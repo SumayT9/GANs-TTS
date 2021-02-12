@@ -32,7 +32,7 @@ def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.co
     json_transcription = {
         "audio_url": response_upload["upload_url"],
         "language_model": "assemblyai_media",
-        "speaker_labels": labels
+        "speaker_labels": labels,
         "punctuate": False,
         "format_text": False
     }
@@ -55,9 +55,9 @@ def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.co
         response = requests.get(endpoint_get, headers=headers)
         try:
             response = response.json()
-            print(response['status'])
         except AttributeError:
             pass
+        time.sleep(2)
 
     return response
 
