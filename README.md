@@ -1,5 +1,5 @@
 # GANs-TTS
-GANs project for inspirit
+GANs project
 
 **MAKE SURE YOU ARE USING PYTHON 3.7**
 
