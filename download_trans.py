@@ -58,7 +58,7 @@ for filename in os.listdir('URLs'):
         os.system("mkdir out/Youtube_dataset/" + dir + "/" + subdir)
 
         # transcribing the video to get videos with one speaker (first transcription)
-        api_key = "39a86dbe224549e08e16178bffd9bf3a"
+        api_key = const.get_api_key()
         transcriber.read_file("temp/" + title + ".wav")
         response_upload = transcriber.upload("temp/" + title + ".wav", api_key)
         response = transcriber.transcribe(response_upload, api_key, labels=True)
@@ -79,9 +79,6 @@ for filename in os.listdir('URLs'):
             splits then we might need to trim for time, unsure though-we have to see how it turns out'''
 
             # splitting the file
-            start = start * 1000  # Works in milliseconds
-            end = end * 1000
-
             clip = vid[start:end]
             # unfamiliar with the exact structure of the dataset, but fill this in so it extracts to the correct location
             clip.export("youtube_dataset/" + title + "_" + count + ".wav", format="wav")
