@@ -48,10 +48,10 @@ class transcribeThread(threading.Thread):
         txt = open("out/Youtube_dataset/" + self.title[:-2] + "/" + self.title + ".txt","a+")
         for clip in utterences:
             txt.write(self.title + "_" + str(numClips) + ".wav | ")
-            numClips += 1
             txt.write(str(clip[2]))
             txt.write("\r\n")
-            os.system("ffmpeg -loglevel warning -ss " + str(int(clip[0])/1000) + " -i temp/" + self.title + ".wav" + " -t " + str((int(clip[1])-int(clip[0]))/1000) + " -c copy out/Youtube_dataset/" + self.title + "_" + str(numClips) + ".wav")
+            os.system("ffmpeg -loglevel warning -ss " + str(int(clip[0])/1000) + " -i temp/" + self.title + ".wav" + " -t " + str((int(clip[1])-int(clip[0]))/1000) + " -c copy out/Youtube_dataset/" + self.title[:-2] + "/" + self.title + "_" + str(numClips) + ".wav")
+            numClips += 1
         print("Done with " + self.name)
         runningThreads -= 1
         #except:
