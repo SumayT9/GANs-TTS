@@ -19,6 +19,7 @@ def read_file(filename, chunk_size=5242880):
 
 # uploads file to API
 def upload(filename, key=api_key):
+    print(filename)
     headers_upload = {'authorization': key}
     response_upload = requests.post('https://api.assemblyai.com/v2/upload',
                                     headers=headers_upload,
@@ -43,10 +44,12 @@ def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.co
     }
 
     # Sending video for transcription
+    print("attempting to get transcribe")
     response_transcription = requests.post(endpoint, json=json_transcription, headers=headers_transcription)
     response = response_transcription.json()
 
     # making get requests until the transcription is finished
+    
     while response['status'] != 'completed':
         endpoint_get = "https://api.assemblyai.com/v2/transcript/" + response['id']
         headers = {
@@ -55,10 +58,10 @@ def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.co
         response = requests.get(endpoint_get, headers=headers)
         try:
             response = response.json()
+            print(response['status'])
         except AttributeError:
             pass
-        time.sleep(2)
-
+        time.sleep(1)
     return response
 
 # extracts speakers and respective utterances for speaker diarization

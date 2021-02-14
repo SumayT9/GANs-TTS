@@ -27,41 +27,47 @@ threads = 0
 runningThreads = 0
 
 class transcribeThread(threading.Thread):
-    def __init__(self,numThreads,dir,title,clip):
+    def __init__(self,numThreads,dir,title):
+        print("Thread being made")
         global runningThreads
         threading.Thread.__init__(self)
         self.threadID = numThreads
-        self.name = "Thread" + str(self.threadID)
+        self.name = "Thread " + str(self.threadID)
         runningThreads += 1
         self.dir = dir
         self.title = title
-        self.clip = clip
     def run(self):
-        try:
-            global runningThreads
-            print(str(self.name))
-            transcriber.read_file("out/Youtube_dataset/" + self.dir + "/" + self.title + "_" + str(self.clip) + ".wav")
-            response_upload = transcriber.upload("out/Youtube_dataset/" + self.dir + "/" + self.title + "_" + str(self.clip) + ".wav")
-            response_transcription = transcriber.transcribe(response_upload,labels=False)
-            with open("out/Youtube_dataset/" + self.dir + "/" + self.title + ".txt","a+") as txt:
-                txt.write(self.title + "_" + str(self.clip) + ".wav | ")
-                txt.write(response_transcription['text'])
-                txt.write("\r\n")
-            print("Done with " + self.name)
-            runningThreads -= 1
-        except:
-            self.run()
+        print(self.name + " is running")
+        #try:
+        global runningThreads
+        transcriber.read_file(dir)
+        response_upload = transcriber.upload(dir)
+        response_transcription = transcriber.transcribe(response_upload,labels=True)
+        utterences = transcriber.find_speakers(response_transcription)
+        numClips = 0
+        txt = open("out/Youtube_dataset/" + self.title[:-2] + "/" + self.title + ".txt","a+")
+        for clip in utterences:
+            txt.write(self.title + "_" + str(numClips) + ".wav | ")
+            numClips += 1
+            txt.write(str(clip[2]))
+            txt.write("\r\n")
+            os.system("ffmpeg -loglevel warning -ss " + str(int(clip[0])/1000) + " -i temp/" + self.title + ".wav" + " -t " + str((int(clip[1])-int(clip[0]))/1000) + " -c copy out/Youtube_dataset/" + self.title + "_" + str(numClips) + ".wav")
+        print("Done with " + self.name)
+        runningThreads -= 1
+        #except:
+           #print("error in thread, retrying")
+           #self.run()
     
         
 
 for filename in os.listdir('URLs'):
     links = open('URLs/'+filename, 'r')
     title = filename[:-4]
-    dir = title
-    os.system("mkdir out/Youtube_dataset/" + dir)
+    os.system("mkdir out/Youtube_dataset/" + title)
     titleNum = 0;
     #download videos
     for url in links:
+            
         title = title + "_" + str(titleNum)
         os.system("youtube-dl --no-check-certificate -f bestaudio -o \"temp/audio.%(ext)s\" \""+url+"\"")
         for c in "\"\' |&?!()+-*/":
@@ -73,85 +79,34 @@ for filename in os.listdir('URLs'):
             os.system("ffmpeg -loglevel warning -i temp/audio.m4a -ar 16000 -sample_fmt s16 -ac 1 -vn temp/" + title + ".wav") #saves as .wav
         
         
-        file = "temp/" + title + ".wav"
-        os.system("ffmpeg -i " + file + " -af silencedetect=noise=-30dB:d=0.2 -f null - 2> vol.txt") #CHANGE SILENCE TIME AT: d=
-        with open('vol.txt', 'r+') as temp:
-            text = temp.read()
-            text = text.replace('silence_start: ','split')
-            text = text.replace('silence_end: ','split')
-            text = text.replace('| silence_duration: ','split')
-            text = text.replace('\n[silencedetect @','split')
-            text = text.replace('\nsize','split')
-            text = text.split('split')
-            text = text[1:]
-            print("Trimming")
-            i = 0
-            while i < len(text):
-                if "x" in text[i]: #0x564b3cb09040 acts strange as a srting idk why
-                    text.remove(text[i])
-                elif "-" in text[i]:
-                    text[i] = "0.0"
-                    i += 1
-                else:
-                    i += 1
-            i = 1
-            clip = 0
-            try:
-                if text[0] == 0.0:
-                    time = text[1]
-                else:
-                    time = 0.0
-                    temp = float(text[0])
-                    os.system("ffmpeg -loglevel warning -ss " + str(time) + " -i " + file + " -t " + str(temp) + " -c copy out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
-                    time = text[1]
-                    clip += 1
-            except:
-                print("no silence")
-                os.system("ffmpeg -loglevel warning -i " + file + " -c copy out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
-            totalTime = 0;
-            while i < len(text):
-                j = 2
-                try:
-                    temp = float(text[i+j]) - float(time)
-                    while (temp < 5) & (i+j < len(text)): #CHANGE MIN TIME HERE
-                        j += 3
-                        temp = float(text[i+j]) - float(time)
-                    i += (j - 2)
-                    j = 2
-                except:
-                    print("error") #Fix later not a huge issue just might lose one clip per video in worst case
-                    break;
-                    
-                os.system("ffmpeg -loglevel warning -ss " + str(time) + " -i " + file + " -t " + str(temp) + " -c copy out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
-                i += 3
-                print("len:" + str(temp))
-                totalTime += temp
-                try:
-                    time = text[i]
-                except:
-                    print("exited loop")
-                print("Cut")
-                print("Thread made")
-                tempThread = transcribeThread(threads,dir,title,clip)
-                threads += 1
-                tempThread.start()
-                
-
-                clip += 1
-            print("\n------------------------------------\n")
-            print("Total Clips:" + str(clip))
-            print("Avg Time: " + str(totalTime/clip))
-            print("Done!")
-            totalSeconds += totalTime
+      
+                    #os.system("ffmpeg -loglevel warning -ss " + str(time) + " -i " + file + " -t " + str(temp) + " -c copy out/Youtube_dataset/" + dir + "/" + title + "_" + str(clip) + ".wav")
+        print("Thread made")
+       
+        dir = "temp/" + title + ".wav"
+        tempThread = transcribeThread(threads,dir,title)
+        title = title[:-2]
+        titleNum += 1
+        threads += 1
+        tempThread.start()
+        
+            
+            
+        #print("\n------------------------------------\n")
+        #print("Total Clips:" + str(clip))
+        #print("Avg Time: " + str(totalTime/clip))
+        #print("Done!")
+        #totalSeconds += totalTime
                 
 
 
 print(ytSuccesses, "Youtube videos successfully downloaded")
-print("Threads are being finishing")
+print("Threads are being finished")
 trys = 0
 while(runningThreads != 0):
     trys += 1
     print(str(runningThreads))
-print(str(trys) + "calls to finish")
+    time.sleep(10)
+print(str(trys) + " calls to finish")
 
 
