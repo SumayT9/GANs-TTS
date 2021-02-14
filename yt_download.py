@@ -61,6 +61,8 @@ class transcribeThread(threading.Thread):
         
 
 for filename in os.listdir('URLs'):
+    if(not(os.path.isfile(filename))):
+        continue
     links = open('URLs/'+filename, 'r')
     title = filename[:-4]
     os.system("mkdir out/Youtube_dataset/" + title)
