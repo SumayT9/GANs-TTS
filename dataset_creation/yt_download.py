@@ -1,5 +1,5 @@
 import os
-import json
+
 os.system("pip3 install youtube-dl pydub pysrt")
 
 
@@ -9,12 +9,7 @@ os.system("mkdir temp")
 os.system("mkdir content")
 os.system("mkdir out/Youtube_dataset")
 
-import pydub
-import subprocess
-import sys, getopt
-from youtube_search import YoutubeSearch
-
-import transcriber
+from dataset_creation import transcriber
 
 import threading
 import time
@@ -42,7 +37,7 @@ class transcribeThread(threading.Thread):
         global runningThreads
         transcriber.read_file(dir)
         response_upload = transcriber.upload(dir)
-        response_transcription = transcriber.transcribe(response_upload,labels=True)
+        response_transcription = transcriber.transcribe(response_upload, labels=True)
         utterences = transcriber.find_speakers(response_transcription)
         numClips = 0
         txt = open("out/Youtube_dataset/" + self.title[:-2] + "/" + self.title + ".txt","a+")
@@ -60,7 +55,7 @@ class transcribeThread(threading.Thread):
     
         
 
-for filename in os.listdir('URLs'):
+for filename in os.listdir('../URLs'):
     if(not(os.path.isfile(filename))):
         continue
     links = open('URLs/'+filename, 'r')

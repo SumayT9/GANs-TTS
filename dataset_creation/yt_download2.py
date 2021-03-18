@@ -23,7 +23,7 @@ py37prefix = ""
 if(True):
     py37prefix = "python3 -m "
 
-for filename in os.listdir('URLs'):
+for filename in os.listdir('../URLs'):
     if(not os.path.isfile("URLs/"+filename)):
         continue
 

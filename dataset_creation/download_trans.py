@@ -1,7 +1,6 @@
 import os
 from os import path
-import json
-import transcriber
+from dataset_creation import transcriber
 from pydub import AudioSegment
 
 # os.system("pip3 install youtube-dl pydub pysrt")
@@ -21,7 +20,7 @@ py37prefix = ""
 if (True):
     py37prefix = "python3 -m "
 
-for filename in os.listdir('URLs'):
+for filename in os.listdir('../URLs'):
     if (not os.path.isfile("URLs/" + filename)):
         continue
 
@@ -88,7 +87,7 @@ for filename in os.listdir('URLs'):
             #loop through files in a subdirectory of the dataset
             transcriber.read_file('''insert_filepath_here''')
             response_upload = transcriber.upload('''insert same filepath here''', api_key)
-            response_transcription = transcriber.transcribe(response_upload, api_key,labels=False)
+            response_transcription = transcriber.transcribe(response_upload, api_key, labels=False)
             transcriber.write_file('''name_of_file''', '''path of transcript''', response_transcription)
 
             '''file should be transcribed and downloaded here'''
