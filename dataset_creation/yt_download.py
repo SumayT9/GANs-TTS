@@ -9,7 +9,7 @@ os.system("mkdir temp")
 os.system("mkdir content")
 os.system("mkdir out/Youtube_dataset")
 
-from dataset_creation import transcriber
+import transcriber
 
 import threading
 import time
@@ -39,6 +39,8 @@ class transcribeThread(threading.Thread):
         response_upload = transcriber.upload(dir)
         response_transcription = transcriber.transcribe(response_upload, labels=True)
         utterences = transcriber.find_speakers(response_transcription)
+        transcriber.write_file("test", "../assembly_output", response_transcription)
+        transcriber.save_json("test", response_transcription)
         numClips = 0
         txt = open("out/Youtube_dataset/" + self.title[:-2] + "/" + self.title + ".txt","a+")
         for clip in utterences:
@@ -55,7 +57,7 @@ class transcribeThread(threading.Thread):
     
         
 
-for filename in os.listdir('../URLs'):
+for filename in os.listdir('URLs'):
     if(not(os.path.isfile(filename))):
         continue
     links = open('URLs/'+filename, 'r')

@@ -1,6 +1,4 @@
-import sys
 import time
-import os
 import requests
 import json
 import const

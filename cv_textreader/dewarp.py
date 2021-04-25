@@ -1,5 +1,7 @@
-# Page Dewarper from the Half Baked Maker
+
 import numpy as np
+from scipy.optimize import curve_fit
+import page_dewarp
 #section 1 goes here
 
 
@@ -111,19 +113,75 @@ def straighten_margins(boundary_points, a):
 
 
 def sort_text_lines(lines):
-    lines = lines[np.argsort(lines[:, 0])]
-    return lines
+    sorted = np.zeros(lines.shape, dtype=np.uint32)
+    for i in range(len(lines)):
+        line = lines[i]
+        sorted[i] = line[np.argsort(line[:, 1])]
+    return sorted
 
 def find_top_bottom(line):
     return np.amax(line, axis=0)[1], np.amin(line, axis=0)[1]
 
-def fit(lines, x_left, x_right):
-    for line in lines:
-        topY, bottomY = find_top_bottom(line)
-        x = line[0]
-        y = line[1]
-        x = (x - x_left)/(x_right - x_left)
-        y = (y - topY)/(bottomY - topY)
+
+from scipy.optimize import curve_fit
+
+def fit(lines):
+    # initializing array of parameters (curve_fit returns parameters)
+    parameters = np.zeros(lines[0][0].shape)
+
+    #quadratic function
+    def line_func(x, c0, c1, c2):
+        return c2 * x**2 + c1 * x + c0
+
+    # looping through lines and fitting each line to an equation
+    for i in range(lines.shape[0]):
+        line = lines[i]
+        x = line[1]
+        y = line[0]
+
+        params, covarience = curve_fit(line_func, x, y)
+        parameters[i] = params
+
+
+def rectify_image(image, a):
+    new_img = np.zeros(image.shape)
+    new_img.fill(255)
+    for y_coord in range(image.shape[0]):
+        for x_coord in range(image.shape[1]):
+            px_value = image[x_coord, y_coord]
+            x_coord = forward_transform(x_coord, y_coord, a)
+            new_img[x_coord, y_coord] = px_value
+
+
+''' 
+Everything below this is a Python implementation of Leptonica's dewarp image
+'''
+
+'''
+input : center points of each text line, each text line
+output: a vertical disparity field of each image
+'''
+def get_vertical_disparity_field(centers, img, lines):
+    disparity_field = np.zeros(img.shape)
+    for i in range(centers.shape[0]):
+        center_y = centers[i][0]
+        for j in range(lines[i].shape[0]):
+            disparity_field[i][j] = center_y - lines[i][j][0]
+    return disparity_field
+
+def detect_text_lines(img_path):
+    return page_dewarp.find_line_points(img_path)
+
+def rectify(parameters, line_centers):
+
+
+
+
+
+
+
+
+
 
 
 
@@ -134,12 +192,7 @@ def fit(lines, x_left, x_right):
 
 
 if __name__ == "__main__":
-    array = np.array([[[0, 2], [4, 1], [2, 4]], [[9, 6], [1, 8], [5, 10]]])
-    print("unsorted")
-    print(array)
-    print()
-    print("sorted")
-    print(sort_text_lines(array))
+
 
 
 
