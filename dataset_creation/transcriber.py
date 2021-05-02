@@ -27,12 +27,12 @@ def upload(filename, key=api_key):
 
 
 # Transcribes audio
-def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.com/v2/transcript", labels=False):
+def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.com/v2/transcript", labels=True):
     json_transcription = {
         "audio_url": response_upload["upload_url"],
         "language_model": "assemblyai_media",
         "speaker_labels": labels,
-        "punctuate": False,
+        "punctuate": True,
         "format_text": False
     }
     
@@ -45,10 +45,11 @@ def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.co
     print("attempting to get transcribe")
     response_transcription = requests.post(endpoint, json=json_transcription, headers=headers_transcription)
     response = response_transcription.json()
+    print(list(response.keys())[3])
 
     # making get requests until the transcription is finished
     
-    while response['status'] != 'completed':
+    while response[list(response.keys())[3]] != 'completed':
         endpoint_get = "https://api.assemblyai.com/v2/transcript/" + response['id']
         headers = {
             "authorization": key,
@@ -56,11 +57,15 @@ def transcribe(response_upload, key=api_key, endpoint="https://api.assemblyai.co
         response = requests.get(endpoint_get, headers=headers)
         try:
             response = response.json()
-            print(response['status'])
+            print(response[list(response.keys())[3]])
         except AttributeError:
             pass
+        except IndexError:
+            pass
         time.sleep(1)
-    return response
+
+    response = requests.get(endpoint_get + "/sentences", headers=headers)
+    return response.json()
 
 # extracts speakers and respective utterances for speaker diarization
 def find_speakers(response):
@@ -98,6 +103,18 @@ def write_file_wlabels(audio_file_name, speaker_dict):
 
 def save_json(audio_file_name, response):
     # writing complete json to a json file
-    with open('assembly_output/' + audio_file_name[:-4] + '_2.json', 'w') as json_file:
+    with open(audio_file_name[:-4] + '_2.json', 'w') as json_file:
         text = json.dumps(response)
         json_file.write(text)
+
+
+if __name__ == "__main__":
+    read_file("transcriber_test.wav")
+    response_u = upload("transcriber_test.wav")
+    #print(response_u)
+    response_t = transcribe(response_u)
+    #write_file("test_t", "test_transcription.txt", response_t)
+    save_json("test_j", response_t)
+
+
+
