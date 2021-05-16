@@ -83,9 +83,9 @@ def show_scaled(name, img):
 
 
 def main():
-    img = cv2.imread("data/cropped.jpg")
-    # img = cv2.imread("test2.jpg")
-    print("Hello World")
+    img = cv2.imread("data/gov_1.jpeg")
+    print("shape")
+    print(img.shape)
     img = img[10:-10, 10:-10]  # remove the border, it confuses contour detection
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # show_scaled("original", gray)
@@ -123,8 +123,7 @@ def main():
 
             # 	# Cropping the text block for giving input to OCR
             cropped = img[y:y + h + 50, (x-10):x + w + 50]
-            cv2.imshow("cropped", cropped)
-            cv2.waitKey(10000)
+        
             file = open("recognized.txt", "a")
 
             # Apply OCR on the cropped image
