@@ -15,6 +15,56 @@ from audioread.exceptions import NoBackendError'''
 import sounddevice as sd
 from torch import multiprocessing
 import time
+from nltk import tokenize
+import string
+
+def break_text(text_file, sent_len):
+    file_text = ""
+    with open(text_file, "r") as lines:
+        file_text = lines.read()
+
+    file_text = file_text.replace("\n", " ")
+    #print(file_text)
+    text = tokenize.word_tokenize(file_text.translate(dict((ord(char), None) for char in string.punctuation)))
+    text_length = len(text)
+    prev_ind = 0
+    l1 = []
+    l2 = []
+    l3 = []
+    l4 = []
+
+    count = 1
+
+    for i in range(sent_len,text_length, sent_len):
+        tidbit = " ".join(text[prev_ind:i])
+        if count == 1:
+            l1.append(tidbit)
+        elif count == 2:
+            l2.append(tidbit)
+        elif count == 3:
+            l3.append(tidbit)
+        elif count == 4:
+            l4.append(tidbit)
+
+
+        #l4.append("-----")
+
+        prev_ind = i
+        count += 1
+        if count == 5:
+            count = 1
+
+    leftover = text_length % sent_len
+    if leftover != 0:
+        l4.append(" ".join(text[text_length - leftover: text_length]))
+
+    '''print(l1)
+    print(l2)
+    print(l3)
+    print(l4)'''
+    return l1, l2, l3, l4
+
+
 
 
 def generate_embedding():
@@ -46,15 +96,16 @@ def generate_audio(text, embedding, synthesizer):
     embeds = [embedding]
     # If you know what the attention layer alignments are, you can retrieve them here by
     # passing return_alignments=True
-    print("not done synthesizing spectrograms")
+    #print("not done synthesizing spectrograms")
     specs = synthesizer.synthesize_spectrograms(texts, embeds)
-    print("done w spectrograms")
+    #print("done w spectrograms")
     spec = specs[0]
 
-    print("Created the mel spectrogram")
+    #print("Created the mel spectrogram")
 
     ## Generating the waveform
-    print("Synthesizing the waveform:")
+    #print("Synthesizing the waveform:")
+
 
     # Synthesizing the waveform is fairly straightforward. Remember that the longer the
     # spectrogram, the more time-efficient the vocoder.
@@ -67,46 +118,142 @@ def generate_audio(text, embedding, synthesizer):
     # Trim excess silences to compensate for gaps in spectrograms (issue #53)
     generated_wav = encoder.preprocess_wav(generated_wav)
 
-    # playing the file
-    print("trying to play sound")
-    sd.play(generated_wav, synthesizer.sample_rate)
-    sd.wait()
+    return generated_wav
+    #generated_wavs.put(generated_wav)
 
+    # playing the file
+    #print("trying to play sound")
+    #sd.play(generated_wav, synthesizer.sample_rate)
+    #sd.wait()
+
+
+def process_l1(l1, embedding, generated_wavs):
+    syn_path = Path("synthesizer/saved_models/pretrained/pretrained2.pt")
+    synthesizer = Synthesizer(syn_path)
+    synthesizer.load()
+    vocoder.load_model(Path("vocoder/saved_models/pretrained/pretrained.pt"))
+    count = 0
+    l1_sents = []
+    for sentence in l1:
+        if sentence != "" and sentence != " ":
+            generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count, sentence))
+            count += 4
+            l1_sents.append(sentence)
 
 # generates wav files from odd lines
-def process_odds(odds, embedding):
-        print("processing odds")
-        for sentence in odds:
-            for i in range(5):
-                time.sleep(5)
-                print("running")
-            print("generating odd sentence: " + sentence)
-            generate_audio(sentence, embedding)
+def process_l2(l2, embedding, generated_wavs):
+    syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
+    synthesizer = Synthesizer(syn_path)
+    synthesizer.load()
+    vocoder.load_model(Path("vocoder/saved_models/pretrained/pretrained.pt"))
+    count = 1
+    for sentence in l2:
+        if sentence != "" and sentence != " ":
+            generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count, sentence))
+            count += 4
 
-# generates wav files from even lines
-def process_evens(evens, embedding, synthesizer):
-    for sentence in evens:
-        print("generating even sentence: " + sentence)
-        generate_audio(sentence, embedding, synthesizer)
+def process_l3(l3, embedding, generated_wavs):
+    syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
+    synthesizer = Synthesizer(syn_path)
+    synthesizer.load()
+    vocoder.load_model(Path("vocoder/saved_models/pretrained/pretrained.pt"))
+    count = 2
+    for sentence in l3:
+        if sentence != "" and sentence != " ":
+            generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count, sentence))
+            count += 4
+
+def process_l4(l4, embedding, generated_wavs):
+    syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
+    synthesizer = Synthesizer(syn_path)
+    synthesizer.load()
+    vocoder.load_model(Path("vocoder/saved_models/pretrained/pretrained.pt"))
+    count = 3
+    for sentence in l4:
+        if sentence != "" and sentence != " ":
+            generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count, sentence))
+            count += 4
+    generated_wavs.append(([0000000], count, "xxxxxxx"))
+
+def process_l5(l5, embedding, generated_wavs):
+    syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
+    synthesizer = Synthesizer(syn_path)
+    synthesizer.load()
+    vocoder.load_model(Path("vocoder/saved_models/pretrained/pretrained.pt"))
+    count = 4
+    for sentence in l5:
+        if sentence != "" and sentence != " ":
+            generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count))
+            count += 7
+
+def process_l6(l6, embedding, generated_wavs):
+    syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
+    synthesizer = Synthesizer(syn_path)
+    synthesizer.load()
+    vocoder.load_model(Path("vocoder/saved_models/pretrained/pretrained.pt"))
+    count = 5
+    for sentence in l6:
+        if sentence != "" and sentence != " ":
+            generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count))
+            count += 7
+
+def process_l7(l7, embedding, generated_wavs):
+    syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
+    synthesizer = Synthesizer(syn_path)
+    synthesizer.load()
+    vocoder.load_model(Path("vocoder/saved_models/pretrained/pretrained.pt"))
+    count = 6
+    for sentence in l7:
+        if sentence != "" and sentence != " ":
+            generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count))
+            count += 7
+
+
+
 
 # plays audio from queue
-def play_audio(generated_wavs):
-    last_time = time.time()
-    while True:
-        if not generated_wavs.empty():
-            sd.stop()
-            sd.play(generated_wavs.get(), synthesizer.sample_rate)
-            sd.wait()
-            last_time = time.time()
+def play_audio(generated_wavs, synthesizer, total_len):
+    time.sleep(90)
+    element = 0
+    done_sents = []
+    failures = 0
+    while failures < 20:
+        if len(generated_wavs) < 1:
+            failures += 1
+            print("\n\nfailure\n\n")
+            time.sleep(3)
         else:
-            if time.time() - last_time > 100:
-                print("done")
+            for j in range(len(generated_wavs)):
+                #print("\n\n\n" + "lentgth of gen waves: " + str(len(generated_wavs)) + " j = " + str(j) + "\n\n")
+                wav_tup = generated_wavs[j]
+                print("\n\n\n" + "wav_tup[1]: " + str(wav_tup[1]) + " element= " + str(element) + "\n\n")
+                if wav_tup[1] == element:
+                    failures = 0
+                    if wav_tup[2] == "xxxxxxx":
+                        print("\n\n\nat end token\n\n")
+                        return
+                    '''sd.stop()
+                    sd.play(wav_tup[0], synthesizer.sample_rate)'''
+                    element += 1
+                    #sd.wait()
+                    done_sents.append(wav_tup[2])
+                    generated_wavs.pop(j)
                 break
+                '''else:
+                    print("\n\n\n\n element: " + str(element))
+                    print("current: " + str(wav_tup[1]) + "\n\n\n")'''
+
+    print("\n\n\n----------done playing audio-------------\n\n\n")
+    print("sentences ------------------\n\n\n")
+    print(done_sents)
 
 
 
 if __name__ == "__main__":
+    multiprocessing.set_start_method('spawn', force=True)
+    #print(multiprocessing.cpu_count())
     global synthesizer
+    global vocoder
     # load models
     encoder.load_model(Path("encoder/saved_models/prt_youtube2.pt"))
     syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
@@ -119,63 +266,53 @@ if __name__ == "__main__":
     print("generating embedding")
     embedding = generate_embedding()
 
-    count = 0
-    evens = []
-    odds = []
+    l1, l2, l3, l4 = break_text("recognized.txt", sent_len=20)
 
-    # creating even and odd lists
-    with open("recognized.txt", "r") as lines:
-        for text in lines.readlines():
-            if text != "" and text != "\n" and len(text) >= 4:
-                if count % 2 == 0:
-                    evens.append(text)
-                    count += 1
-                else:
-                    odds.append(text)
-                    count += 1
+    total_len = len(l1) + len(l2) + len(l3) + len(l4)
+
+
+
 
     # creating queue of wavs to be spoken
-    #generated_wavs = multiprocessing.Queue()
+    manager = multiprocessing.Manager()
+    generated_wavs = manager.list()
 
 
-    p1 = multiprocessing.Process(target=process_evens, args=(evens, embedding, synthesizer))
-    #p2 = multiprocessing.Process(target=process_odds, args=(odds, embedding))
-    # starting process 1
+    p1 = multiprocessing.Process(target=process_l1, args=(l1, embedding, generated_wavs))
+    p2 = multiprocessing.Process(target=process_l2, args=(l2, embedding, generated_wavs))
+    p3 = multiprocessing.Process(target=process_l3, args=(l3, embedding, generated_wavs))
+    p4 = multiprocessing.Process(target=process_l4, args=(l4, embedding, generated_wavs))
+    p5 = multiprocessing.Process(target=play_audio, args=(generated_wavs, synthesizer, total_len))
+
+    '''p5 = multiprocessing.Process(target=process_l5, args=(l5, embedding, generated_wavs))
+    p6 = multiprocessing.Process(target=process_l6, args=(l6, embedding, generated_wavs))
+    p7 = multiprocessing.Process(target=process_l7, args=(l7, embedding, generated_wavs))'''
+
+
     p1.start()
-    print("started p1")
-    # starting process 2
-    #p2.start()
-    #print("started p2")
+    p2.start()
+    p3.start()
+    p4.start()
 
-    # wait until process 1 is finished
+    p5.start()
+    '''
+    p6.start()
+    p7.start()
+    p8.start()'''
     p1.join()
-    # wait until process 2 is finished
-    #p2.join()
+    p2.join()
+    p3.join()
+    p4.join()
+    p5.join()
+    '''
+    p6.join()
+    p7.join()
+    p8.join()'''
+
+    for wav in generated_wavs:
+        print(wav[2])
 
 
 
-
-#param
-    #["safjhdkh", "kfahjlh", "fkjahjkh", "fadgsdg"]
-    #convert them into mel spectrogram
-
-#todo
-    #multiprocessing
-    #even and odd lines
-    #read them sequentially by creating global list
-
-
-
-
-
-
-
-
-    # Save it on the disk
-    '''filename = "demo_output_%02d.wav" % num_generated
-    print(generated_wav.dtype)
-    sf.write(filename, generated_wav.astype(np.float32), synthesizer.sample_rate)
-    num_generated += 1
-    print("\nSaved output as %s\n\n" % filename)'''
 
 
