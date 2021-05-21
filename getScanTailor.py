@@ -1,5 +1,4 @@
-import requests
-import os
+import requests, os, zipfile
 
 
 
@@ -37,5 +36,9 @@ def save_response_content(response, destination):
 
 file_id = "1kMWg4CIHcz6aoW36a7m2wuZlSpvh43KB"
 destination = "scantailor.zip"
+print("downloading...",end="")
 download_file_from_google_drive(file_id, destination)
-os.system("unzip scantailor.zip")
+print("done\nunzipping...",end="")
+with zipfile.ZipFile("scantailor.zip", "r") as zipRef:
+    zipRef.extractall(".")
+print("done")
