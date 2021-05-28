@@ -107,14 +107,17 @@ def save_json(audio_file_name, response):
         text = json.dumps(response)
         json_file.write(text)
 
-
-if __name__ == "__main__":
-    read_file("transcriber_test.wav")
-    response_u = upload("transcriber_test.wav")
-    #print(response_u)
+response = None
+def get_transcriptions(audio_file_path):
+    read_file(audio_file_path)
+    print("read file")
+    response_u = upload(audio_file_path)
+    print("uploaded audio")
     response_t = transcribe(response_u)
-    #write_file("test_t", "test_transcription.txt", response_t)
-    save_json("test_j", response_t)
+    print("received transcrptions")
+    response = response_t
+    return response
 
-
-
+# transcriptions = get_transcriptions("transcriber_test.wav")
+# save_json("transcriptions", transcriptions)
+# print(response)
