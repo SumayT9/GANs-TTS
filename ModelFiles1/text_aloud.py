@@ -56,7 +56,16 @@ def break_text(text_file, sent_len):
 
     leftover = text_length % sent_len
     if leftover != 0:
-        l4.append(" ".join(text[text_length - leftover: text_length]))
+        leftover_text = " ".join(text[text_length - leftover: text_length])
+        if len(l4) < len(l3):
+            l4.append(leftover_text)
+        elif len(l3) < len(l2):
+            l3.append(leftover_text)
+        elif len(l2) < len(l1):
+            l2.append(leftover_text)
+        else:
+            l1.append(leftover_text)
+
 
     '''print(l1)
     print(l2)
@@ -68,7 +77,7 @@ def break_text(text_file, sent_len):
 
 
 def generate_embedding():
-    in_fpath = "data/Miller_2.wav"
+    in_fpath = "data/other_test.wav"
     ## Computing the embedding
     # First, we load the wav using the function that the speaker encoder provides. This is
     # important: there is preprocessing that must be applied.
@@ -173,7 +182,6 @@ def process_l4(l4, embedding, generated_wavs):
         if sentence != "" and sentence != " ":
             generated_wavs.append((generate_audio(sentence, embedding, synthesizer), count, sentence))
             count += 4
-    generated_wavs.append(([0000000], count, "xxxxxxx"))
 
 def process_l5(l5, embedding, generated_wavs):
     syn_path = Path("synthesizer/saved_models/pretrained/pretrained.pt")
@@ -216,36 +224,24 @@ def play_audio(generated_wavs, synthesizer, total_len):
     time.sleep(90)
     element = 0
     done_sents = []
-    failures = 0
-    while failures < 20:
-        if len(generated_wavs) < 1:
-            failures += 1
-            print("\n\nfailure\n\n")
-            time.sleep(3)
-        else:
-            for j in range(len(generated_wavs)):
-                #print("\n\n\n" + "lentgth of gen waves: " + str(len(generated_wavs)) + " j = " + str(j) + "\n\n")
-                wav_tup = generated_wavs[j]
-                print("\n\n\n" + "wav_tup[1]: " + str(wav_tup[1]) + " element= " + str(element) + "\n\n")
-                if wav_tup[1] == element:
-                    failures = 0
-                    if wav_tup[2] == "xxxxxxx":
-                        print("\n\n\nat end token\n\n")
-                        return
-                    '''sd.stop()
-                    sd.play(wav_tup[0], synthesizer.sample_rate)'''
-                    element += 1
-                    #sd.wait()
-                    done_sents.append(wav_tup[2])
-                    generated_wavs.pop(j)
+    while True:
+        for j in range(len(generated_wavs)):
+            wav_tup = generated_wavs[j]
+            #print("\n\n\n" + "wav_tup[1]: " + str(wav_tup[1]) + " element= " + str(element) + "\n\n")
+            if wav_tup[1] == element:
+                sd.stop()
+                sd.play(wav_tup[0], synthesizer.sample_rate)
+                element += 1
+                sd.wait()
+                done_sents.append(wav_tup[2])
+                generated_wavs.pop(j)
                 break
-                '''else:
-                    print("\n\n\n\n element: " + str(element))
-                    print("current: " + str(wav_tup[1]) + "\n\n\n")'''
+        if element == total_len:
+            break
 
     print("\n\n\n----------done playing audio-------------\n\n\n")
     print("sentences ------------------\n\n\n")
-    print(done_sents)
+    #print(done_sents)
 
 
 
@@ -266,9 +262,10 @@ if __name__ == "__main__":
     print("generating embedding")
     embedding = generate_embedding()
 
-    l1, l2, l3, l4 = break_text("recognized.txt", sent_len=20)
+    l1, l2, l3, l4 = break_text("recognized.txt", sent_len=30)
 
     total_len = len(l1) + len(l2) + len(l3) + len(l4)
+
 
 
 
@@ -308,11 +305,3 @@ if __name__ == "__main__":
     p6.join()
     p7.join()
     p8.join()'''
-
-    for wav in generated_wavs:
-        print(wav[2])
-
-
-
-
-
