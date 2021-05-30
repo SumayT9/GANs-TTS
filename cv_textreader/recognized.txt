@@ -1,44 +1,295 @@
-ael. Some years ago—never mind 5 a
-precisely—having little or no money in my purse, a
-nothing particular to interest me on shore, I thought
-
-would sail about a little and see the watery part of the world. It ig
-
-a way I have of driving off the spleen and regulating the circula-
-
-tion. Whenever I find myself growing grim about the mouth:
-
-whenever it is a damp, drizzly November in my soul; whenever J}
-
-nd myself involuntarily pausing before coffin warehouses, a
-bringing up the rear of every funeral I meet; and especially
-
-is my substitute for pistol and ball. With a philosophical
-
-flourish Cato throws himself upon his sword; I quietly take to
-
-e ship. There is nothing surprising in this. If they but knew it,
-
-almost all men in their degree, some time or other, cherish very
-early the same feelings towards the ocean with me.
-
-There now is your insular city of the Manhattoes, belted round
-
-by wharves as Indian isles by coral reefs—commerce surrounds
+ 
 
  
 
-Once more. Say you are
-e country; in some high la
-pf lakes. Take almost any pa
-
-sf men be plunged in his deep
-est reveries—stand that man
+ 
 
  
 
-a dreamy Sabbath afternoon,
-o from Corlears Hook to Co-
+ 
 
  
+
+ 
+
+ 
+
+FIGURE 19.29 The resolution of a telescope.
+
+(a) Stars resolved
+
+(b) Stars just resolved
+
+ 
+
+(c) Stars not resolved
+
+ 
+
+Your vision is sharpest in the central part of the retina, an area called the fovea.
+This area contains a high density of light-sensing photoreceptors, in this case the
+color-sensing cone cells. The center-to-center spacing of these cells is approximately
+3m. If the image of the laser pointer spot in Example 19.17 is centered on one
+cone cell, then the edge of the central maximum—the first dark fringe—is at the
+center of the next cone cell, as shown in FiGuRE 19.28, This makes sense; we'd expect
+the size of the central maximum to closely match the spacing of the cone cells, Pack-
+ing the cone cells any tighter wouldn't increase visual acuity, and packing them less
+tightly wouldn't take full advantage of the possible resolution of the eye. Increasing
+the pupil size doesn’t improve resolution, because this increases the importance of
+aberrations, For pupil sizes larger than a few mm, resolution of the eye isn’t limited
+by diffraction—it is limited by aberrations.
+
+The fact that light is focused to a small spot, not a perfect point, has important
+consequences for how well a telescope can resolve two stars separated by only a
+small angle in the sky. F1GURE 12.29» shows how two nearby stars would appear in a
+telescope. Instead of perfect points, they appear as two diffraction images. Nonetheless,
+because they're clearly two separate stars, we say they are resolved. FIGURE 19.29 shows two
+Sars that are closer together. Here the two diffraction pattems overlap, and it is becoming
+difficult to see them as two independent stars: They are barely resolved. The two very
+nearby stars in FIGURE 19.28 are so close together that we can’t resolve them at all.
+
+How close can the two diffraction patterns be before we can no longer resolve
+them? One of the major scientists of the 19th century, Lord Rayleigh, studied this
+problem and suggested a reasonable rule that today is called Rayleigh’s criterion. In
+Figure 19.29b, where the two stars are just resolved, the central maximum of the dif-
+fraction pattern of one star lies on top of the first dark fringe of the diffraction pat-
+tem of the other star. Because the angle between the central maximum and the first
+dark fringe is ,, the centers of the two stars are separated by angle 6, = 1.22A/D.
+Thus Rayleigh’s criterion is:
+
+Two objects are resolvable if they are separated by an angle @ that is greater than
+
+6; = 1,22A/D. If their angular separation is less than 6, then they are not
+
+resolvable. If their separation is equal to @,, then they are just barely resolvable.
+
+For telescopes, the angle 6; = 1.22A/D is called the angular resolution of the
+telescope. The angular resolution depends only on the lens diameter and the wave-
+the magnification is not a factor, Two overlapped, unresolved images will
+femain overlapped and unresolved no matter what the magnification. For visible
+
+  
+
+> phan A is pretty much fixed, the only parameter over which the astronomer
+eee a mince of the lous or mnltor of the telescope.
+
+ 
+
+FIGURE 19.29 The resolution of a telescope.
+
+(a) Stars resolved
+
+(b) Stars just resolved
+
+ 
+
+(c) Stars not resolved
+
+ 
+
+Your vision is sharpest in the central part of the retina, an area called the fovea.
+This area contains a high density of light-sensing photoreceptors, in this case the
+color-sensing cone cells. The center-to-center spacing of these cells is approximately
+3m. If the image of the laser pointer spot in Example 19.17 is centered on one
+cone cell, then the edge of the central maximum—the first dark fringe—is at the
+center of the next cone cell, as shown in FiGuRE 19.28, This makes sense; we'd expect
+the size of the central maximum to closely match the spacing of the cone cells, Pack-
+ing the cone cells any tighter wouldn't increase visual acuity, and packing them less
+tightly wouldn't take full advantage of the possible resolution of the eye. Increasing
+the pupil size doesn’t improve resolution, because this increases the importance of
+aberrations, For pupil sizes larger than a few mm, resolution of the eye isn’t limited
+by diffraction—it is limited by aberrations.
+
+The fact that light is focused to a small spot, not a perfect point, has important
+consequences for how well a telescope can resolve two stars separated by only a
+small angle in the sky. F1GURE 12.29» shows how two nearby stars would appear in a
+telescope. Instead of perfect points, they appear as two diffraction images. Nonetheless,
+because they're clearly two separate stars, we say they are resolved. FIGURE 19.29 shows two
+Sars that are closer together. Here the two diffraction pattems overlap, and it is becoming
+difficult to see them as two independent stars: They are barely resolved. The two very
+nearby stars in FIGURE 19.28 are so close together that we can’t resolve them at all.
+
+How close can the two diffraction patterns be before we can no longer resolve
+them? One of the major scientists of the 19th century, Lord Rayleigh, studied this
+problem and suggested a reasonable rule that today is called Rayleigh’s criterion. In
+Figure 19.29b, where the two stars are just resolved, the central maximum of the dif-
+fraction pattern of one star lies on top of the first dark fringe of the diffraction pat-
+tem of the other star. Because the angle between the central maximum and the first
+dark fringe is ,, the centers of the two stars are separated by angle 6, = 1.22A/D.
+Thus Rayleigh’s criterion is:
+
+Two objects are resolvable if they are separated by an angle @ that is greater than
+
+6; = 1,22A/D. If their angular separation is less than 6, then they are not
+
+resolvable. If their separation is equal to @,, then they are just barely resolvable.
+
+For telescopes, the angle 6; = 1.22A/D is called the angular resolution of the
+telescope. The angular resolution depends only on the lens diameter and the wave-
+the magnification is not a factor, Two overlapped, unresolved images will
+femain overlapped and unresolved no matter what the magnification. For visible
+
+  
+
+> phan A is pretty much fixed, the only parameter over which the astronomer
+eee a mince of the lous or mnltor of the telescope.
+
+ 
+
+(Asocial movement need not have
+io entuy, for example, various
+jhe o reduce immigi
+
+liberal goals. In the
+Catholics or Masons out of public office. Broad a
+tlgios revivals are social movements. In recent yean
+decane Tea Pay movement, ich has ey
+
+Noone is quite certain why social movements aise
+ieee eee people ar lap rent t0 some
+
+-at another moment, many ofthese same people ene
+= mnately about religion, civil right ee or
+ios Noid monary ee
+disse (an ol spl on the Santa Barbara beaches helped
+jpnch the environmental movement), the dramatic od
+widely publicized activities ofa few leaders (lunch councer
+sivins helped stimulate the Civil Rights movement), or
+thecoming of age of a new generation that takes up a cause
+shred by eloquent writers, reachers, or evangelists,
+
+‘Whatever its origin, the effect of a social movement
+isto increase the value some people attach to purposive
+inantves, As a consequence, new interest groups are
+formed that rely on these incentives.
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+The Environmental Movement
+Thecnvironmental movement provides a good example
+‘ofhow a social movement gives rise to interest groups
+formed from reliance on purposive incentives. In the
+1890s, as a result of the emergence of conservation as
+‘a major issue, the Sierra Club was organized. In the
+1930s, conservation once again became popular, and
+the Wilderness Society and the National Wildlife Fed-
+eon wre cated. Inthe 1960s and 1970s envio
+mental issues again had high public inerest, and we saw
+themergene ofthe Environmental Defense Fund and
+Environmental Action.
+
+‘The smallest of these organizations
+‘Aion and the Environmental Defense Fund) tend to
+bare the most liberal members. This ofren is che case with
+‘organizations that arise from social movements. A move-
+‘ent will spawn many organizations. The most passion”
+‘ucly aroused people will be the fewest in number and.
+‘he will gravitate roward the organizations that take che
+‘ost exreme positions; asa result, chese organizations are
+Snall but vociferous. The more numerous and less Pas
+*onate people will gravitate toward. more moderate
+Yociferous organizations, which tend to be larger. i
+
+‘Ashappens over the years to mos poliialy succes
+‘movements, the environmental movement e
+‘ore fragmented chan it was in the pameenenst
+leg oies and organizations within i ave Begun
+
+  
+
+ 
+
+jironmental
+
+ 
+
+ 
+
+ 
+
+ig
+
+advocs
+ing th
+and s
+5
+larly
+oil an
+pipeli
+Chap¢
+foract
+publi
+been
+produ
+Tines
+1
+
+prove
+2016,
+lenge
+InDe
+Obam
+
+ 
+
+Re ee
+
+IMAG} 11.5 Opponents of the Dakota Access Pipeline protest
+
+advocse somewhat different policy approaches to achiew-
+ing thd same basic (in ths cas, environmental protection
+and subtainability) goals.”
+
+Exvironmental activists have recently been particu-
+ive in two areas: climate change and domestic
+
+nd gas production, particularly with respect to new
+
+Pipelifes. We discuss the politics of climate change in
+‘Chapt 17, but ici important to know that many envi-
+ronmhtal interest groups are active on this issue, pressing
+for actfon a the federal and state levels, and trying to raise
+publidawareness on the ise. Environmentalists have also
+
+tive in debates over increased oil and natural gas
+produftion, particularly with respect to proposed pipe-
+lines th transport this oil and nacural gas.
+
+Te Dakota Access Pipeline project, which would
+bre oil from North Dakota co other states, has
+tobe especially controversial, as it would cross lands
+red sacred by the Standing Rock Indian Tribe. In
+ibe members and environmental activists staged a
+protest to try to block the pipeline’ construction.
+smber 2016, shortly before leaving office, President
+
+‘blocked completion of the pipeline, seemingly
+fa win to the protestors. Shortly after his inaugura-
+, President Trump issued an executive order
+
+Feminist Movement
+ist social movements have occurred in this
+county's history—in the 1830s, the 1890, the 1920s,
+sha ule 1960s. Each period brought about new organi
+some of which have endured to the present. For
+‘Game, the League of Women Vorers was founded in
+1920 fo educate and oxganue women for the purpose
+ively using their newly won righ 0 vote. AS We
+
+ 
+
+ 
+
+ 
+
 

@@ -1,3 +1,6 @@
-
-const.py
+dataset_creation/const.py
 .DS_Store
+.idea
+cv_textreader/binarization/weight_dibco2016.hdf5
+.pt
+.pyc

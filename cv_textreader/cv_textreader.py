@@ -69,10 +69,9 @@ import cv2
 import sys
 import os
 import pytesseract
-import page_dewarp
 
 SCALE = 4
-AREA_THRESHOLD = 0
+AREA_THRESHOLD = 427505.0 / 2
 
 
 def show_scaled(name, img):
@@ -84,27 +83,27 @@ def show_scaled(name, img):
 
 
 def main():
-    img = cv2.imread("data/gov_2.jpeg")
-    # img = cv2.imread("test2.jpg")
-    #img = img[10:-10, 10:-10]  # remove the border, it confuses contour detection
-    # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) blocked for page_dewarp test
+    img = cv2.imread("data/gov_1.jpeg")
+    print("shape")
+    print(img.shape)
+    img = img[10:-10, 10:-10]  # remove the border, it confuses contour detection
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # show_scaled("original", gray)
 
     # black and white, and inverted, because
     # white pixels are treated as objects in
     # contour detection
-    '''thresholded = cv2.adaptiveThreshold(    #commented out for page_dewarp which already thresholds
+    thresholded = cv2.adaptiveThreshold(
         gray, 255,
         cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY_INV,
         25,
         15
-    )'''
+    )
     # show_scaled('thresholded', thresholded)
     # I use a kernel that is wide enough to connect characters
     # but not text blocks, and tall enough to connect lines.
-    img_thresholded = page_dewarp.main(img)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13, 33))
-    closing = cv2.morphologyEx(img_thresholded, cv2.MORPH_CLOSE, kernel)
+    closing = cv2.morphologyEx(thresholded, cv2.MORPH_CLOSE, kernel)
 
     contours, hierarchy = cv2.findContours(closing, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     # show_scaled("closing", closing)
@@ -114,14 +113,17 @@ def main():
         convex_contour = cv2.convexHull(contour)
         area = cv2.contourArea(convex_contour)
         if area > AREA_THRESHOLD:
-            cv2.drawContours(img_thresholded, [convex_contour], -1, (255, 0, 0), 3)
+            #cv2.drawContours(img, [convex_contour], -1, (255, 0, 0), 3) drawing the contours screws recognition up
             x, y, w, h = cv2.boundingRect(contour)
 
+            thresholded = 255 - thresholded
+
             # 	# Drawing a rectangle on copied image
-            rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            rect = cv2.rectangle(img, (x-10, y-10), (x + w + 50, y + h + 50), (0, 255, 0), 2)
 
             # 	# Cropping the text block for giving input to OCR
-            cropped = img_thresholded[y:y + h, x:x + w]
+            cropped = img[y:y + h + 50, (x-10):x + w + 50]
+        
             file = open("recognized.txt", "a")
 
             # Apply OCR on the cropped image
@@ -134,8 +136,8 @@ def main():
             # Close the file
             file.close
 
-        # show_scaled("contours", img)
-    cv2.imwrite("contours.png", img_thresholded)
+            # show_scaled("contours", img)
+    cv2.imwrite("contours.png", img)
 
 
 if __name__ == '__main__':
