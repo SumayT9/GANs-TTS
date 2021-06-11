@@ -1,20 +1,10 @@
-'''from encoder.params_model import model_embedding_size as speaker_embedding_size
-from utils.argutils import print_args
-from utils.modelutils import check_model_paths'''
 from synthesizer.inference import Synthesizer
 from encoder import inference as encoder
 from vocoder import inference as vocoder
 from pathlib import Path
 import numpy as np
-'''import soundfile as sf
-import librosa
-import argparse
-import torch
-import sys
-from audioread.exceptions import NoBackendError'''
 import sounddevice as sd
 from torch import multiprocessing
-import time
 from nltk import tokenize
 import string
 
@@ -128,12 +118,6 @@ def generate_audio(text, embedding, synthesizer):
     generated_wav = encoder.preprocess_wav(generated_wav)
 
     return generated_wav
-    #generated_wavs.put(generated_wav)
-
-    # playing the file
-    #print("trying to play sound")
-    #sd.play(generated_wav, synthesizer.sample_rate)
-    #sd.wait()
 
 
 def process_l1(l1, embedding, generated_wavs):
@@ -240,7 +224,6 @@ def play_audio(generated_wavs, synthesizer, total_len):
             break
 
     print("\n\n\n----------done playing audio-------------\n\n\n")
-    print("sentences ------------------\n\n\n")
     #print(done_sents)
 
 
@@ -262,7 +245,7 @@ if __name__ == "__main__":
     print("generating embedding")
     embedding = generate_embedding()
 
-    l1, l2, l3, l4 = break_text("recognized.txt", sent_len=30)
+    l1, l2, l3, l4 = break_text("recognized.txt", sent_len=34)
 
     total_len = len(l1) + len(l2) + len(l3) + len(l4)
 
