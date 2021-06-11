@@ -17,11 +17,12 @@ int16_max = (2 ** 15) - 1
 
 
 def preprocess_wav(fpath_or_wav: Union[str, Path, np.ndarray],
-                   source_sr: Optional[int] = None):
+                   source_sr: Optional[int] = None,
+                   normalize: Optional[bool] = True,
+                   trim_silence: Optional[bool] = True):
     """
     Applies the preprocessing operations used in training the Speaker Encoder to a waveform 
     either on disk or in memory. The waveform will be resampled to match the data hyperparameters.
-
     :param fpath_or_wav: either a filepath to an audio file (many extensions are supported, not 
     just .wav), either the waveform as a numpy array of floats.
     :param source_sr: if passing an audio waveform, the sampling rate of the waveform before 
@@ -40,8 +41,9 @@ def preprocess_wav(fpath_or_wav: Union[str, Path, np.ndarray],
         wav = librosa.resample(wav, source_sr, sampling_rate)
         
     # Apply the preprocessing: normalize volume and shorten long silences 
-    wav = normalize_volume(wav, audio_norm_target_dBFS, increase_only=True)
-    if webrtcvad:
+    if normalize:
+        wav = normalize_volume(wav, audio_norm_target_dBFS, increase_only=True)
+    if webrtcvad and trim_silence:
         wav = trim_long_silences(wav)
     
     return wav
@@ -66,7 +68,6 @@ def trim_long_silences(wav):
     """
     Ensures that segments without voice in the waveform remain no longer than a 
     threshold determined by the VAD parameters in params.py.
-
     :param wav: the raw waveform as a numpy array of floats 
     :return: the same waveform with silences trimmed away (length <= original wav length)
     """
