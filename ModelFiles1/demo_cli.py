@@ -218,31 +218,3 @@ if __name__ == '__main__':
         except Exception as e:
             print("Caught exception: %s" % repr(e))
             print("Restarting\n")
-
-
-
-
-
-
-
-parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument("-e", "--enc_model_fpath", type=Path,
-                        default="encoder/saved_models/prt_youtube2.pt",
-                        help="Path to a saved encoder")
-    parser.add_argument("-s", "--syn_model_dir", type=Path,
-                        default="synthesizer/saved_models/logs-pretrained/",
-                        help="Directory containing the synthesizer model")
-    parser.add_argument("-v", "--voc_model_fpath", type=Path,
-                        default="vocoder/saved_models/pretrained/pretrained.pt",
-                        help="Path to a saved vocoder")
-    parser.add_argument("--low_mem", action="store_true", help=\
-        "If True, the memory used by the synthesizer will be freed after each use. Adds large "
-        "overhead but allows to save some GPU memory for lower-end GPUs.")
-    parser.add_argument("--no_sound", action="store_true", help=\
-        "If True, audio won't be played.")
-    parser.add_argument("--seed", type=int, default=None, help=\
-        "Optional random number seed value to make toolbox deterministic.")
-    parser.add_argument("--no_mp3_support", action="store_true", help=\
-        "If True, disallows loading mp3 files to prevent audioread errors when ffmpeg is not installed.")
