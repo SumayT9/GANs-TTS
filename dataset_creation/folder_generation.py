@@ -49,15 +49,15 @@ def generate_folders(training_data_directory, audio_path, json_path):
         if random.random() < 0.66 and i < len(sentences) - 2:
             sentence_2 = sentences[i+1]
             start2 = sentence_2['start']
-            end2 = sentence_2['end']
+            end = sentence_2['end']
             text2 = sentence_2['text']
-            segment2 = split_segment(audio_file, start2, end2)
+            segment2 = split_segment(audio_file, start2, end)
             segment += AudioSegment.silent(duration=150)
             segment += segment2
             text += " " + text2
             i += 1
 
-        save_data(training_data_directory, segment, start, end2, text, i)
+        save_data(training_data_directory, segment, start, end, text, i)
         i += 1
 
 
